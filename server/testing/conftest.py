@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+import pytest
+from app import app, db
+
+@pytest.fixture(autouse=True)
+def run_before_tests():
+    with app.app_context():
+        db.create_all()
+        yield
+        db.session.remove()
+        db.drop_all()
+
+
 
 def pytest_itemcollected(item):
     par = item.parent.obj
